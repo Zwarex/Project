@@ -1,15 +1,17 @@
-from string import ascii_letters
-import imageio
-import os, sys
+from moviepy.editor import *
 
-class Format(object):
-    MP4 = ".mp4"
-    GIF = ".gif"
+def convert(video, x, name):
+    #Interpreting video
+    clip = VideoFileClip(video)
 
+    #getting only x seconds of video
+    clip = clip.subclip(0,x)
 
-def convert(video, format):
+    #save the gif
+    clip.write_gif(name,".gif")
 
     return 
+
 
 """ MAIN """
 
@@ -24,5 +26,7 @@ print(bannertext)
 
 
 file = input("Drag your file here and press enter : ")
+second = int(input("How many second(s) should be your gif : "))
+name = input("The name of the GIF : ")
 
-convert(file, Format.GIF)
+convert(file, second, name)
