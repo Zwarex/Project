@@ -30,28 +30,30 @@ def write_password():
             if character[i] == '\n':
                 ligne += character[i+1]
     
-    if ligne != "b" :
+    if ligne == "" :
         key.close
         key = open("key.txt", "w")
         generate_key = Fernet.generate_key()
-        key.writelines(str(generate_key))
+        key.writelines(str(generate_key.decode('utf-8')))
         print("Your key is : ",generate_key)
         key.close
 
     #encrypt the new id and password
-    with open('key.txt') as key:
-        reader = key.read()
-        for row in reader:      #https://stackoverflow.com/questions/53897333/read-fernet-key-causes-valueerror-fernet-key-must-be-32-url-safe-base64-encoded
-            used_key = row[0]
-            print(Fernet(used_key))
-    f = Fernet(used_key)
+    used_key = open("key.txt", "r")
+    keyencrypt = used_key.read()
+    used_key.close
+    f = Fernet(keyencrypt)
 
-    encrypt_id = f.encrypt(b,identifiant)
-    encrypt_password = f.encrypt(b,password)
+    encrypt_id = f.encrypt(identifiant.encode())
+    encrypt_password = f.encrypt(password.encode())
+    print("Encrypted id : ",encrypt_id)
+    print("Encrypted password : ",encrypt_password)
 
     #put encrypted pass and id into the txt
-    #file.writelines(encrypt_id+" "+encrypt_password)
+    file.writelines(str(encrypt_id.decode('utf-8')))
+    file.writelines(str(encrypt_password.decode('utf-8')))
     file.close
+    print("New id and password succesfully saved !")
     return
 
 ### MAIN ###
