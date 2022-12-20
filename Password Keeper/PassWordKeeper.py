@@ -1,5 +1,6 @@
 from cryptography.fernet import Fernet
 import os 
+import csv
 
 ### LECTURE FICHIER ###
 
@@ -8,7 +9,23 @@ def check_password():
     file = open("mypassword.txt", "r")
     key = open("key.txt", "r")
 
-    return
+    #take  content of the file
+    content = file.read().split("/")
+    content.pop()
+    
+    #decrypt
+    compteur = 0
+    keydecrypt = key.read()
+    f = Fernet(keydecrypt)
+    for i in content : #parcourir un par un les elements
+        i_bytes = bytes(i, 'UTF-8') 
+        encrypt_pass = i_bytes
+        decrypted_pass = f.decrypt(encrypt_pass).decode()
+        if compteur%2 == 0:
+            print("The ID : ",decrypted_pass)
+        else :
+            print("The password : ",decrypted_pass)
+        compteur +=1
 
 ### ECRITURE FICHIER ###
 
@@ -49,9 +66,11 @@ def write_password():
     print("Encrypted id : ",encrypt_id)
     print("Encrypted password : ",encrypt_password)
 
-    #put encrypted pass and id into the txt
-    file.writelines(str(encrypt_id.decode('utf-8')))
-    file.writelines(str(encrypt_password.decode('utf-8')))
+    #put encrypted pass and id into the txt 
+    file.write(str(encrypt_id.decode('UTF-8'))) #.decode("utf-8")
+    file.write("/")
+    file.write(str(encrypt_password.decode('UTF-8')))
+    file.write("/")
     file.close
     print("New id and password succesfully saved !")
     return
@@ -73,7 +92,7 @@ banner = """
 `. `.       `.   `..  `.   `.. `.  `..  `.   `..  `..   
 `..  `..   `..... `..`..... `..`.   `..`..... `.. `..   
 `..   `..  `.        `.        `.. `.. `.         `..   
-`..     `..  `....     `....   `..       `....   `...   
+`..     `..  `....     `....   `..       `....   `... 
                                `..                      
 
 """
